@@ -1,0 +1,12 @@
+# Failure-analysis probe: an external timeout on every attempt, so the single rerun also fails and is reported.
+name: actions-probe-external-down
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fetch-mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download mirror index
+        run: curl -sS --max-time 3 -o /dev/null http://10.255.255.1/index.json

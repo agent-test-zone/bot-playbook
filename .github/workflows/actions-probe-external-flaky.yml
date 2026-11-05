@@ -1,0 +1,16 @@
+# Failure-analysis probe: an external timeout on the first attempt only, so one automatic rerun should pass.
+name: actions-probe-external-flaky
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fetch-fixture:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download fixture
+        run: |
+          if [ "$GITHUB_RUN_ATTEMPT" = "1" ]; then
+            curl -sS --max-time 3 -o /dev/null http://10.255.255.1/fixture.json
+          fi
+          echo "fixture ready on attempt $GITHUB_RUN_ATTEMPT"

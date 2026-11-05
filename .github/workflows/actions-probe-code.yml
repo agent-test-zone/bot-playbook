@@ -1,0 +1,12 @@
+# Failure-analysis probe: a failing assertion, classified as a code failure.
+name: actions-probe-code
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check price rounding
+        run: python3 -c "assert round(2.675, 2) == 2.68, 'round(2.675, 2) returned ' + str(round(2.675, 2))"

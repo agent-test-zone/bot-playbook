@@ -1,0 +1,14 @@
+# Failure-analysis probe: a failure without recognizable causal evidence, classified as unknown.
+name: actions-probe-unknown
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Package bundle
+        run: |
+          echo "bundle checksum does not match manifest"
+          exit 3
