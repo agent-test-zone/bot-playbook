@@ -19,7 +19,7 @@ Both projects have known defects that the tests do not cover, so that reviews an
 sh scripts/test.sh
 ```
 
-The script runs `python3 -m unittest` for `inventory/` and `node --test` for `textkit/`. The `ci` workflow runs the same script on pull requests and on `main`.
+The script runs, from any directory, `python3 -m unittest` for `inventory/` and `node --test` for `textkit/`. The `ci` workflow runs the same script on pull requests and on `main`.
 
 ## Actions probes
 
