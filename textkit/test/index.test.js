@@ -14,3 +14,8 @@ test('titleCase upper-cases each word', () => {
 test('wordCount counts the words of a sentence', () => {
   assert.equal(wordCount('ship the order today'), 4);
 });
+
+test('wordCount ignores extra whitespace and counts empty text as zero', () => {
+  assert.equal(wordCount(''), 0);
+  assert.equal(wordCount('  ship\tthe\norder  '), 3);
+});

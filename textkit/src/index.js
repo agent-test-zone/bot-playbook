@@ -18,5 +18,6 @@ export function titleCase(text) {
 
 /** Number of words in `text`, for the export summary line. */
 export function wordCount(text) {
-  return String(text).split(' ').length;
+  const words = String(text).trim().split(/\s+/);
+  return words[0] === '' ? 0 : words.length;
 }
