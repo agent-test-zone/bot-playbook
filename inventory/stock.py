@@ -17,7 +17,12 @@ class Inventory:
         return self.quantities[sku]
 
     def remove(self, sku: str, quantity: int) -> int:
-        """Ship `quantity` units of `sku` and return the new quantity."""
+        """Ship `quantity` units of `sku` and return the new quantity.
+
+        Raises:
+            ValueError: `quantity` is not positive, or exceeds the units on hand
+                (an unknown SKU counts as 0 on hand).
+        """
         if quantity <= 0:
             raise ValueError("quantity must be positive")
         current = self.quantities.get(sku, 0)
