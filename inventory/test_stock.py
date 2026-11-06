@@ -13,6 +13,25 @@ class InventoryTest(unittest.TestCase):
         stock = Inventory({"apple": 5})
         self.assertEqual(stock.remove("apple", 2), 3)
 
+    def test_remove_more_than_stock_is_rejected(self):
+        stock = Inventory({"apple": 2})
+        with self.assertRaises(ValueError) as caught:
+            stock.remove("apple", 5)
+        self.assertEqual(str(caught.exception), "cannot ship 5 of apple: only 2 on hand")
+        self.assertEqual(stock.quantities, {"apple": 2})
+
+    def test_remove_unknown_sku_is_rejected(self):
+        stock = Inventory({"apple": 2})
+        with self.assertRaises(ValueError) as caught:
+            stock.remove("pear", 1)
+        self.assertEqual(str(caught.exception), "cannot ship 1 of pear: only 0 on hand")
+        self.assertEqual(stock.quantities, {"apple": 2})
+
+    def test_remove_exactly_all_stock(self):
+        stock = Inventory({"apple": 2})
+        self.assertEqual(stock.remove("apple", 2), 0)
+        self.assertEqual(stock.quantities, {"apple": 0})
+
     def test_quantities_must_be_positive(self):
         stock = Inventory()
         with self.assertRaises(ValueError):
