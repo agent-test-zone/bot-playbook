@@ -1,0 +1,35 @@
+# Review-bot probe: posts an inline review comment on a pull request as github-actions[bot], to see how the department
+# bot treats another review bot's comment on a pull request it opened. Runs only by hand.
+name: review-bot-probe
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Pull request number
+        required: true
+      path:
+        description: File in the pull request to comment on
+        required: true
+      line:
+        description: Line of that file in the pull request head
+        required: true
+      body:
+        description: Comment text
+        required: true
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post review comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ inputs.pull_request }}
+          FILE: ${{ inputs.path }}
+          LINE: ${{ inputs.line }}
+          BODY: ${{ inputs.body }}
+        run: |
+          head=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR" --jq .head.sha)
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/comments" -f body="$BODY" -f commit_id="$head" -f path="$FILE" -F line="$LINE" -f side=RIGHT --jq .html_url
