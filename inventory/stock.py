@@ -20,7 +20,12 @@ class Inventory:
         """Ship `quantity` units of `sku` and return the new quantity."""
         if quantity <= 0:
             raise ValueError("quantity must be positive")
-        self.quantities[sku] = self.quantities.get(sku, 0) - quantity
+        current = self.quantities.get(sku, 0)
+        if quantity > current:
+            raise ValueError(
+                f"not enough stock for {sku!r}: {current} on hand, {quantity} requested"
+            )
+        self.quantities[sku] = current - quantity
         return self.quantities[sku]
 
     def total_value(self, prices: dict[str, float]) -> float:
