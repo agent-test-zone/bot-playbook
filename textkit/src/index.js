@@ -15,3 +15,8 @@ export function titleCase(text) {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
+
+/** Number of words in `text`, for the export summary line. */
+export function wordCount(text) {
+  return String(text).split(' ').length;
+}
