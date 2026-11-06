@@ -36,13 +36,14 @@
     },
     "daily": {
       "commands": [
-        "mkdir -p .gate-tools && curl -fsSL --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 10 --max-time 120 -o .gate-tools/actionlint.tgz https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz && echo \"023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757  .gate-tools/actionlint.tgz\" | sha256sum -c - && tar xzf .gate-tools/actionlint.tgz -C .gate-tools actionlint && chmod +x .gate-tools/actionlint && ./.gate-tools/actionlint -shellcheck= -pyflakes= -no-color; rc=$?; rm -rf .gate-tools; exit $rc"
+        "mkdir -p .gate-tools && curl -fsSL --retry 3 --retry-delay 2 --retry-all-errors --connect-timeout 10 --max-time 120 -o .gate-tools/actionlint.tgz https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz && echo \"023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757  .gate-tools/actionlint.tgz\" | sha256sum -c - && tar xzf .gate-tools/actionlint.tgz -C .gate-tools actionlint && chmod +x .gate-tools/actionlint && ./.gate-tools/actionlint -shellcheck= -pyflakes= -no-color $(find .github/workflows -maxdepth 1 -type f -name '*.y*ml' | sort); rc=$?; rm -rf .gate-tools; exit $rc"
       ],
       "enforcement": "observe",
       "continueOnError": true
     },
     "release": {
       "commands": [
+        "python3 -m compileall -q inventory",
         "sh scripts/test.sh"
       ]
     }
