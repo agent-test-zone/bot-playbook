@@ -22,9 +22,7 @@ class Inventory:
             raise ValueError("quantity must be positive")
         current = self.quantities.get(sku, 0)
         if quantity > current:
-            raise ValueError(
-                f"not enough stock for {sku!r}: {current} on hand, {quantity} requested"
-            )
+            raise ValueError(f"cannot ship {quantity} of {sku}: only {current} on hand")
         self.quantities[sku] = current - quantity
         return self.quantities[sku]
 
