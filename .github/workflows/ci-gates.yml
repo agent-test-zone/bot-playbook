@@ -1,0 +1,62 @@
+# CI gates (CI-workflow), generated from the commands confirmed during onboarding.
+# One job runs the lanes .github/ci-gates.json maps to the current event, and reports the commit it checked out.
+# Without a merge queue, pr-ready runs on pull requests and the merge gate (pr-ready and pr-merge) runs after each merge.
+name: "CI gates"
+
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches: ["main"]
+  schedule:
+    # Daily lane: 16:00 UTC = 00:00 Asia/Shanghai.
+    - cron: '0 16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Pull request runs of one branch replace each other; every queue entry, merge, daily and manual run keeps its own run.
+concurrency:
+  group: ci-gates-${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  gate:
+    name: gate
+    runs-on: ubuntu-latest
+    env:
+      # The commit the reports name: the PR head on pull_request, the checked-out commit otherwise.
+      CI_GATES_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # The PR head itself, not GitHub's merge preview: the reports name this commit.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      # gate.mjs runs on Node 20+; the repository's own toolchains follow.
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run gate lanes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # ci-gates.json maps each event to its lanes.
+        run: node scripts/gate/gate.mjs run --event "$GITHUB_EVENT_NAME"
+
+      - name: Upload gate reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-gates-reports
+          path: gate-reports/
+          if-no-files-found: warn
+          retention-days: 30
