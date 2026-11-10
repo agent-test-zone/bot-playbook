@@ -15,6 +15,8 @@ Both projects have known defects that the tests do not cover, so that reviews an
 
 ## Tests
 
+The sample projects need no third-party test dependencies; the script below runs both suites.
+
 ```sh
 sh scripts/test.sh
 ```
