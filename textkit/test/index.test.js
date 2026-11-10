@@ -18,3 +18,9 @@ test('median handles odd, even and empty input without mutating the array', () =
   assert.equal(median([4, 1, 3, 2]), 2.5);
   assert.equal(median([]), null);
 });
+
+test('median sorts multi-digit and negative values numerically', () => {
+  assert.equal(median([10, 9, 30]), 10);
+  assert.equal(median([-5, -1, 3]), -1);
+  assert.equal(median([10, 20, 2, 3]), 6.5);
+});
