@@ -10,3 +10,8 @@ test('slugify joins words with single dashes', () => {
 test('titleCase upper-cases each word', () => {
   assert.equal(titleCase('quarterly sales report'), 'Quarterly Sales Report');
 });
+
+test('slugify returns an empty slug for punctuation only and keeps digits', () => {
+  assert.equal(slugify('!!! ...'), '');
+  assert.equal(slugify('2026'), '2026');
+});
