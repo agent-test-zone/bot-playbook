@@ -8,10 +8,9 @@ export function slugify(text) {
     .replace(/^-|-$/g, '');
 }
 
-/** Upper-case the first letter of every word separated by spaces. */
+/** Upper-case the first letter of every word separated by whitespace. */
 export function titleCase(text) {
-  return String(text)
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+  return String(text).replace(/(^|\s)(\S)/g, (match, whitespace, character) =>
+    whitespace + character.toUpperCase()
+  );
 }

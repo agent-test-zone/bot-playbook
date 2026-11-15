@@ -9,4 +9,7 @@ test('slugify joins words with single dashes', () => {
 
 test('titleCase upper-cases each word', () => {
   assert.equal(titleCase('quarterly sales report'), 'Quarterly Sales Report');
+  assert.equal(titleCase('hello\tworld'), 'Hello\tWorld');
+  assert.equal(titleCase('hello\nworld'), 'Hello\nWorld');
+  assert.equal(titleCase('  hello  world  '), '  Hello  World  ');
 });
