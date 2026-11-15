@@ -20,6 +20,25 @@ class InventoryTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             stock.remove("apple", -1)
 
+    def test_remove_more_than_stock_is_rejected(self):
+        stock = Inventory({"apple": 5})
+        with self.assertRaises(ValueError) as ctx:
+            stock.remove("apple", 6)
+        self.assertEqual(str(ctx.exception), "cannot ship 6 of apple: only 5 on hand")
+        self.assertEqual(stock.quantities, {"apple": 5})
+
+    def test_remove_unknown_sku_is_rejected(self):
+        stock = Inventory({"apple": 5})
+        with self.assertRaises(ValueError) as ctx:
+            stock.remove("pear", 1)
+        self.assertEqual(str(ctx.exception), "cannot ship 1 of pear: only 0 on hand")
+        self.assertEqual(stock.quantities, {"apple": 5})
+
+    def test_remove_exactly_all_stock(self):
+        stock = Inventory({"apple": 5})
+        self.assertEqual(stock.remove("apple", 5), 0)
+        self.assertEqual(stock.quantities, {"apple": 0})
+
     def test_total_value(self):
         stock = Inventory({"apple": 2, "pear": 1})
         self.assertAlmostEqual(stock.total_value({"apple": 0.5, "pear": 1.25}), 2.25)
