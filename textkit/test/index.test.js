@@ -14,4 +14,5 @@ test('titleCase upper-cases each word', () => {
 test('slugify returns an empty slug for punctuation only and keeps digits', () => {
   assert.equal(slugify('!!! ...'), '');
   assert.equal(slugify('2026'), '2026');
+  assert.equal(slugify('v2 -- 3'), 'v2-3');
 });
