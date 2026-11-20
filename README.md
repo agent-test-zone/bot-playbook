@@ -32,6 +32,8 @@ The `actions-probe-*` workflows only run by hand (`workflow_dispatch`) and fail 
 | `actions-probe-external-down` | A network timeout on every attempt |
 | `actions-probe-unknown` | An exit code without a recognizable cause |
 
+`review-bot-probe` also runs only by hand: it posts an inline review comment on a pull request as `github-actions[bot]`, standing in for another review bot.
+
 ## Labels
 
 The repository's labels are the bot's label list: `type/*`, `source/*`, `priority/*`, `area/*` and `size/*`, each with a description, plus `bot-develop`. The bot only adds labels that already exist here, never changes an axis a person has already set, and never adds `priority/critical` or `bot-develop`; those are for people.
